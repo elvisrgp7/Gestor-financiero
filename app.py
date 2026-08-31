@@ -252,13 +252,29 @@ st.title("💼 Mi Gestor Financiero")
 st.markdown("Control inteligente de ingresos, gastos y reportes en tiempo real desde Enero 2026.")
 
 st.sidebar.header("⚙️ Configuración y Filtros")
-selected_month = st.sidebar.text_input("Filtrar por Mes (YYYY-MM)", value="2026-08")
+
+# Filtro de Mes optimizado con Desplegable y opción de escritura
+meses_opciones = ['2026-01', '2026-02', '2026-03', '2026-04', '2026-05', '2026-06', '2026-07', '2026-08', '2026-09', '2026-10', '2026-11', '2026-12']
+nombres_meses = {
+    '2026-01': 'Enero 2026', '2026-02': 'Febrero 2026', '2026-03': 'Marzo 2026', 
+    '2026-04': 'Abril 2026', '2026-05': 'Mayo 2026', '2026-06': 'Junio 2026', 
+    '2026-07': 'Julio 2026', '2026-08': 'Agosto 2026', '2026-09': 'Setiembre 2026',
+    '2026-10': 'Octubre 2026', '2026-11': 'Noviembre 2026', '2026-12': 'Diciembre 2026'
+}
+
+selected_month = st.sidebar.selectbox(
+    "Seleccionar Mes", 
+    options=meses_opciones, 
+    format_func=lambda x: nombres_meses.get(x, x),
+    index=7 # Default Agosto (índice 7)
+)
+
 search_query = st.sidebar.text_input("🔍 Buscar en detalle", value="")
 
 if st.sidebar.button("🔄 Restaurar Todo el Historial 2026"):
     st.session_state.transactions = HISTORIAL_2026
     st.session_state.edit_idx = None
-    st.sidebar.success("¡Historial completo restaurado!")
+    st.sidebar.success("¡Historial completo restaurado al Excel original!")
 
 df = pd.DataFrame(st.session_state.transactions)
 
@@ -324,7 +340,7 @@ with tab1:
                 st.error("Por favor ingresa un detalle.")
 
 with tab2:
-    st.subheader(f"Movimientos de {selected_month}")
+    st.subheader(f"Movimientos de {nombres_meses.get(selected_month, selected_month)}")
     
     if not df_filtered.empty:
         csv_data = df_filtered.to_csv(index=False).encode('utf-8')
