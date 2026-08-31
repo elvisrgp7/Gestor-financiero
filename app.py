@@ -24,8 +24,8 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-CATEGORIAS_GASTO = ['Vivienda', 'Alimentación', 'Servicios', 'Transporte', 'Educación', 'Ocio', 'Salud', 'Otros']
-CATEGORIAS_INGRESO = ['Sueldo', 'Beca', 'Inversiones (BVL)', 'Intereses', 'Regalo', 'Otros']
+CATEGORIAS_GASTO = ['Vivienda', 'Alimentación', 'Servicios', 'Transporte', 'Educación', 'Ocio', 'Salud', 'Gasto Familiar', 'Otros']
+CATEGORIAS_INGRESO = ['Sueldo', 'Inversiones (BVL)', 'Intereses', 'Otros']
 
 HISTORIAL_2026 = [
     # --- ENERO 2026 ---
@@ -44,33 +44,33 @@ HISTORIAL_2026 = [
     { 'date': '2026-01-15', 'description': 'gas', 'amount': 25.0, 'category': 'Servicios', 'type': 'gasto' },
     { 'date': '2026-01-21', 'description': 'pichanga', 'amount': 17.2, 'category': 'Ocio', 'type': 'gasto' },
     { 'date': '2026-01-31', 'description': 'Pago Prestamo', 'amount': 143.0, 'category': 'Otros', 'type': 'gasto' },
-    { 'date': '2026-01-31', 'description': 'Ingresos SBS', 'amount': 1200.0, 'category': 'Sueldo', 'type': 'ingreso' },
-    { 'date': '2026-01-31', 'description': 'Ingreso intereses', 'amount': 10.0, 'category': 'Intereses', 'type': 'ingreso' },
+    { 'date': '2026-01-31', 'description': 'Salario SBS', 'amount': 1200.0, 'category': 'Sueldo', 'type': 'ingreso' },
+    { 'date': '2026-01-31', 'description': 'Ingreso intereses Cuenta Ahorros', 'amount': 10.0, 'category': 'Intereses', 'type': 'ingreso' },
 
     # --- FEBRERO 2026 ---
     { 'date': '2026-02-12', 'description': 'Cuarto', 'amount': 175.0, 'category': 'Vivienda', 'type': 'gasto' },
     { 'date': '2026-02-28', 'description': 'Internet celular', 'amount': 26.0, 'category': 'Servicios', 'type': 'gasto' },
-    { 'date': '2026-02-06', 'description': 'pasaje pache', 'amount': 39.5, 'category': 'Transporte', 'type': 'gasto' },
-    { 'date': '2026-02-08', 'description': 'plantillas', 'amount': 5.0, 'category': 'Salud', 'type': 'gasto' },
-    { 'date': '2026-02-10', 'description': 'medicina', 'amount': 9.6, 'category': 'Salud', 'type': 'gasto' },
-    { 'date': '2026-02-12', 'description': 'Luz mamá', 'amount': 5.0, 'category': 'Servicios', 'type': 'gasto' },
+    { 'date': '2026-02-06', 'description': 'pasaje padre', 'amount': 99.5, 'category': 'Gasto Familiar', 'type': 'gasto' },
+    { 'date': '2026-02-08', 'description': 'plantillas', 'amount': 5.0, 'category': 'Otros', 'type': 'gasto' },
+    { 'date': '2026-02-10', 'description': 'marcianos-antojo', 'amount': 6, 'category': 'Otros', 'type': 'gasto' },
+    { 'date': '2026-02-12', 'description': 'Luz mamá', 'amount': 5.0, 'category': 'Gasto Familiar', 'type': 'gasto' },
     { 'date': '2026-02-01', 'description': 'compras de la semana', 'amount': 120.0, 'category': 'Alimentación', 'type': 'gasto' },
     { 'date': '2026-02-08', 'description': 'compras de la semana', 'amount': 120.0, 'category': 'Alimentación', 'type': 'gasto' },
     { 'date': '2026-02-15', 'description': 'compras de la semana', 'amount': 120.0, 'category': 'Alimentación', 'type': 'gasto' },
     { 'date': '2026-02-22', 'description': 'compras de la semana', 'amount': 120.0, 'category': 'Alimentación', 'type': 'gasto' },
-    { 'date': '2026-02-14', 'description': 'Pichanga', 'amount': 19.7, 'category': 'Ocio', 'type': 'gasto' },
+    { 'date': '2026-02-14', 'description': 'Pichanga', 'amount': 15.7, 'category': 'Ocio', 'type': 'gasto' },
     { 'date': '2026-02-02', 'description': 'Pasajes + desayunos', 'amount': 35.0, 'category': 'Transporte', 'type': 'gasto' },
     { 'date': '2026-02-09', 'description': 'Pasajes + desayunos', 'amount': 35.0, 'category': 'Transporte', 'type': 'gasto' },
     { 'date': '2026-02-16', 'description': 'Pasajes + desayunos', 'amount': 35.0, 'category': 'Transporte', 'type': 'gasto' },
     { 'date': '2026-02-23', 'description': 'Pasajes + desayunos', 'amount': 35.0, 'category': 'Transporte', 'type': 'gasto' },
     { 'date': '2026-02-18', 'description': 'Corte de Cabello', 'amount': 12.0, 'category': 'Otros', 'type': 'gasto' },
-    { 'date': '2026-02-28', 'description': 'Pago Prestamo', 'amount': 143.0, 'category': 'Otros', 'type': 'gasto' },
+    { 'date': '2026-02-28', 'description': 'Pago Prestamo', 'amount': 143.0, 'category': 'Gasto Familiar', 'type': 'gasto' },
     { 'date': '2026-02-21', 'description': 'Pichanga', 'amount': 17.0, 'category': 'Ocio', 'type': 'gasto' },
-    { 'date': '2026-02-22', 'description': 'Recargo', 'amount': 5.0, 'category': 'Otros', 'type': 'gasto' },
-    { 'date': '2026-02-25', 'description': 'Pollada Colaboración', 'amount': 22.0, 'category': 'Ocio', 'type': 'gasto' },
+    { 'date': '2026-02-22', 'description': 'Recarga Mon', 'amount': 5.0, 'category': 'Gasto Familiar', 'type': 'gasto' },
+    { 'date': '2026-02-25', 'description': 'Pollada Colaboración', 'amount': 22.0, 'category': 'Otros', 'type': 'gasto' },
     { 'date': '2026-02-27', 'description': 'Voleyball', 'amount': 18.0, 'category': 'Ocio', 'type': 'gasto' },
-    { 'date': '2026-02-28', 'description': 'Ingresos SBS', 'amount': 1500.0, 'category': 'Sueldo', 'type': 'ingreso' },
-    { 'date': '2026-02-28', 'description': 'Ingreso intereses', 'amount': 20.0, 'category': 'Intereses', 'type': 'ingreso' },
+    { 'date': '2026-02-28', 'description': 'Salario SBS', 'amount': 1930.0, 'category': 'Sueldo', 'type': 'ingreso' },
+    { 'date': '2026-02-28', 'description': 'Ingreso intereses Cuenta Ahorros', 'amount': 10.0, 'category': 'Intereses', 'type': 'ingreso' },
 
     # --- MARZO 2026 ---
     { 'date': '2026-03-12', 'description': 'Cuarto', 'amount': 175.0, 'category': 'Vivienda', 'type': 'gasto' },
