@@ -59,13 +59,15 @@ if 'transactions' not in st.session_state:
     st.session_state.transactions = HISTORIAL_2026
 
 st.title("💼 Mi Gestor Financiero")
-st.markdown("Control de ingresos y gastos optimizado en Streamlit.")
+st.markdown("Control inteligente de ingresos, gastos y reportes en tiempo real.")
 
-st.sidebar.header("⚙️ Opciones")
+st.sidebar.header("⚙️ Configuración y Filtros")
 current_year_month = datetime.now().strftime("%Y-%m")
 selected_month = st.sidebar.text_input("Filtrar por Mes (YYYY-MM)", value="2026-08")
 
-if st.sidebar.button("Cargar/Restaurar Historial 2026"):
+search_query = st.sidebar.text_input("🔍 Buscar en detalle", value="")
+
+if st.sidebar.button("🔄 Restaurar Historial 2026"):
     st.session_state.transactions = HISTORIAL_2026
     st.sidebar.success("¡Historial restaurado!")
 
@@ -74,13 +76,16 @@ df = pd.DataFrame(st.session_state.transactions)
 if not df.empty:
     df['date'] = pd.to_datetime(df['date'])
     df_filtered = df[df['date'].dt.strftime('%Y-%m') == selected_month].copy()
+    
+    if search_query:
+        df_filtered = df_filtered[df_filtered['description'].str.contains(search_query, case=False, na=False)]
+        
     df_filtered.sort_values(by='date', ascending=False, inplace=True)
     
     total_income = df_filtered[df_filtered['type'] == 'ingreso']['amount'].sum()
     total_expense = df_filtered[df_filtered['type'] == 'gasto']['amount'].sum()
     balance = total_income - total_expense
 
-    # FIXED: st.cols changed to st.columns
     col1, col2, col3 = st.columns(3)
     col1.metric("Balance del Mes", f"S/ {balance:,.2f}")
     col2.metric("Ingresos", f"S/ {total_income:,.2f}")
@@ -91,14 +96,23 @@ else:
 
 st.divider()
 
-tab1, tab2 = st.tabs(["➕ Nuevo Registro", "📋 Movimientos"])
+if not df_filtered.empty:
+    with st.expander("📊 Ver Gráfico de Gastos por Categoría"):
+        df_gastos = df_filtered[df_filtered['type'] == 'gasto']
+        if not df_gastos.empty:
+            cat_sum = df_gastos.groupby('category')['amount'].sum()
+            st.bar_chart(cat_sum)
+        else:
+            st.info("No hay gastos registrados en este mes para graficar.")
+
+tab1, tab2 = st.tabs(["➕ Nuevo Registro", "📋 Movimientos y Exportar"])
 
 with tab1:
     st.subheader("Agregar Movimiento")
     with st.form("transaction_form", clear_on_submit=True):
         form_type = st.radio("Tipo", ["gasto", "ingreso"], horizontal=True)
         form_date = st.date_input("Fecha", value=datetime.now())
-        form_description = st.text_input("Detalle (Ej. Pago de cuarto)")
+        form_description = st.text_input("Detalle (Ej. Compras del supermercado)")
         
         categories = CATEGORIAS_GASTO if form_type == 'gasto' else CATEGORIAS_INGRESO
         form_category = st.selectbox("Categoría", categories)
@@ -122,8 +136,19 @@ with tab1:
 
 with tab2:
     st.subheader(f"Movimientos de {selected_month}")
+    
+    if not df_filtered.empty:
+        csv_data = df_filtered.to_csv(index=False).encode('utf-8')
+        st.download_button(
+            label="📥 Descargar estos movimientos en CSV (Excel)",
+            data=csv_data,
+            file_name=f'movimientos_{selected_month}.csv',
+            mime='text/csv',
+        )
+        st.markdown("<br>", unsafe_allow_html=True)
+
     if df_filtered.empty:
-        st.info("No hay movimientos registrados para este mes.")
+        st.info("No hay movimientos registrados para este mes o búsqueda.")
     else:
         for idx, row in df_filtered.reset_index().iterrows():
             sign = "+" if row['type'] == 'ingreso' else "-"
