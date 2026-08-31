@@ -253,7 +253,6 @@ st.markdown("Control inteligente de ingresos, gastos y reportes en tiempo real d
 
 st.sidebar.header("⚙️ Configuración y Filtros")
 
-# Filtro de Mes optimizado con Desplegable y opción de escritura
 meses_opciones = ['2026-01', '2026-02', '2026-03', '2026-04', '2026-05', '2026-06', '2026-07', '2026-08', '2026-09', '2026-10', '2026-11', '2026-12']
 nombres_meses = {
     '2026-01': 'Enero 2026', '2026-02': 'Febrero 2026', '2026-03': 'Marzo 2026', 
@@ -266,15 +265,18 @@ selected_month = st.sidebar.selectbox(
     "Seleccionar Mes", 
     options=meses_opciones, 
     format_func=lambda x: nombres_meses.get(x, x),
-    index=7 # Default Agosto (índice 7)
+    index=7 # Default Agosto
 )
 
 search_query = st.sidebar.text_input("🔍 Buscar en detalle", value="")
 
-if st.sidebar.button("🔄 Restaurar Todo el Historial 2026"):
-    st.session_state.transactions = HISTORIAL_2026
-    st.session_state.edit_idx = None
-    st.sidebar.success("¡Historial completo restaurado al Excel original!")
+with st.sidebar.expander("⚙️ Opciones avanzadas"):
+    st.markdown("<small style='color:gray;'>¿Alteraste o eliminaste datos por error? Aquí puedes volver a cargar todo el Excel original del 2026.</small>", unsafe_allow_html=True)
+    if st.button("🔄 Restaurar Todo el Historial 2026"):
+        st.session_state.transactions = HISTORIAL_2026
+        st.session_state.edit_idx = None
+        st.success("¡Historial completo restaurado con éxito!")
+        st.rerun()
 
 df = pd.DataFrame(st.session_state.transactions)
 
