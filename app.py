@@ -27,7 +27,6 @@ st.markdown("""
 
 FIREBASE_API_KEY = "AIzaSyBXM-zge0ybXqaRpOPo617pN3MxqB6c9QQ"
 PROJECT_ID = "mi-gestor-eb931"
-# Aumentado a 5000 para garantizar que nunca tengas límites al modificar o agregar años enteros
 FIRESTORE_URL = f"https://firestore.googleapis.com/v1/projects/{PROJECT_ID}/databases/(default)/documents/transactions?pageSize=5000&key={FIREBASE_API_KEY}"
 
 CATEGORIAS_GASTO = ['Vivienda', 'Alimentación', 'Servicios', 'Transporte', 'Educación', 'Ocio', 'Salud', 'Gasto Familiar', 'Otros']
@@ -342,7 +341,7 @@ selected_month = st.sidebar.selectbox(
     "Filtrar por Mes", 
     options=meses_opciones, 
     format_func=lambda x: nombres_meses.get(x, x),
-    index=0 # Inicia en Enero 2026 por defecto
+    index=0
 )
 
 search_query = st.sidebar.text_input("🔍 Buscar en detalle", value="")
