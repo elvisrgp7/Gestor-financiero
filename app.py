@@ -55,7 +55,7 @@ HISTORIAL_2026 = [
     { 'date': '2026-02-10', 'description': 'marcianos-antojo', 'amount': 6, 'category': 'Otros', 'type': 'gasto' },
     { 'date': '2026-02-12', 'description': 'Luz mamá', 'amount': 5.0, 'category': 'Gasto Familiar', 'type': 'gasto' },
     { 'date': '2026-02-01', 'description': 'compras de la semana', 'amount': 120.0, 'category': 'Alimentación', 'type': 'gasto' },
-    { 'date': '2026-02-08', 'description': 'compras de la semana', 'amount': 120.0, 'category': 'Alimentación', 'type': 'gasto' },
+    { 'date': '2026-02-08', 'description': 'compras de la semana', 'amount': 100.0, 'category': 'Alimentación', 'type': 'gasto' },
     { 'date': '2026-02-15', 'description': 'compras de la semana', 'amount': 120.0, 'category': 'Alimentación', 'type': 'gasto' },
     { 'date': '2026-02-22', 'description': 'compras de la semana', 'amount': 120.0, 'category': 'Alimentación', 'type': 'gasto' },
     { 'date': '2026-02-14', 'description': 'Pichanga', 'amount': 15.7, 'category': 'Ocio', 'type': 'gasto' },
