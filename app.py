@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, date
 import requests
 
 st.set_page_config(
@@ -33,6 +33,9 @@ SIGNUP_URL = f"https://identitytoolkit.googleapis.com/v1/accounts:signUp?key={FI
 CATEGORIAS_GASTO = ['Vivienda', 'Alimentación', 'Servicios', 'Transporte', 'Educación', 'Ocio', 'Salud', 'Gasto Familiar', 'Otros']
 CATEGORIAS_INGRESO = ['Sueldo', 'Inversiones (BVL)', 'Intereses', 'Otros']
 
+# --- REGLAS DE FECHAS ESTRICTAS PARA EL HISTORIAL 2026 ---
+# 1. Cuarto: Todos los 12 de cada mes
+# 2. Préstamo e Internet (celular/fijo): El último día de cada mes
 HISTORIAL_2026_INICIAL = [
     # --- ENERO 2026 ---
     { 'date': '2026-01-12', 'description': 'Cuarto', 'amount': 175.0, 'category': 'Vivienda', 'type': 'gasto' },
@@ -333,7 +336,7 @@ def update_firebase_transaction(doc_id, item):
     if token:
         headers["Authorization"] = f"Bearer {token}"
         
-    patch_url = f"https://firestore.googleapis.com/v1/projects/{PROJECT_ID}/databases/(default)/databases/(default)/documents/transactions/{doc_id}?key={FIREBASE_API_KEY}&updateMask.fieldPaths=date&updateMask.fieldPaths=description&updateMask.fieldPaths=amount&updateMask.fieldPaths=category&updateMask.fieldPaths=type"
+    patch_url = f"https://firestore.googleapis.com/v1/projects/{PROJECT_ID}/databases/(default)/documents/transactions/{doc_id}?key={FIREBASE_API_KEY}&updateMask.fieldPaths=date&updateMask.fieldPaths=description&updateMask.fieldPaths=amount&updateMask.fieldPaths=category&updateMask.fieldPaths=type"
     try:
         body = {
             "fields": {
@@ -360,7 +363,7 @@ if 'edit_id' not in st.session_state:
     st.session_state.edit_id = None
 
 st.title("💼 Mi Gestor Financiero")
-st.markdown("Control inteligente sincronizado en la nube (Firebase con Autenticación).")
+st.markdown("Control inteligente sincronizado en la nube (Firebase).")
 
 st.sidebar.header("⚙️ Configuración y Filtros")
 
@@ -376,22 +379,22 @@ selected_month = st.sidebar.selectbox(
     "Filtrar por Mes", 
     options=meses_opciones, 
     format_func=lambda x: nombres_meses.get(x, x),
-    index=0
+    index=2 # Empieza en Marzo por defecto o ajusta según prefieras
 )
 
 search_query = st.sidebar.text_input("🔍 Buscar en detalle", value="")
 
 with st.sidebar.expander("⚙️ Opciones avanzadas"):
-    st.markdown("<small style='color:gray;'>¿Quieres restablecer todo el historial original del 2026?</small>", unsafe_allow_html=True)
     if st.button("🔄 Restaurar Todo el Historial 2026"):
-        current_docs = get_firebase_transactions()
-        for doc in current_docs:
-            if 'id' in doc:
-                delete_firebase_transaction(doc['id'])
-        for item in HISTORIAL_2026_INICIAL:
-            add_firebase_transaction(item)
-        st.session_state.transactions = get_firebase_transactions()
-        st.session_state.edit_id = None
+        with st.spinner("Restaurando historial completo..."):
+            current_docs = get_firebase_transactions()
+            for doc in current_docs:
+                if 'id' in doc:
+                    delete_firebase_transaction(doc['id'])
+            for item in HISTORIAL_2026_INICIAL:
+                add_firebase_transaction(item)
+            st.session_state.transactions = get_firebase_transactions()
+            st.session_state.edit_id = None
         st.success("¡Historial completo restaurado en la nube!")
         st.rerun()
 
@@ -434,9 +437,13 @@ tab1, tab2 = st.tabs(["➕ Nuevo Registro", "📋 Movimientos y Exportar"])
 
 with tab1:
     st.subheader("Agregar Movimiento")
+    
+    # Fecha sugerida basada en el mes seleccionado en el filtro (para evitar confusiones)
+    default_form_date = datetime.strptime(selected_month + '-01', '%Y-%m-%d').date()
+    
     with st.form("transaction_form", clear_on_submit=True):
         form_type = st.radio("Tipo", ["gasto", "ingreso"], horizontal=True)
-        form_date = st.date_input("Fecha", value=datetime.now())
+        form_date = st.date_input("Fecha", value=default_form_date)
         form_description = st.text_input("Detalle (Ej. Compras del supermercado)")
         
         categories = CATEGORIAS_GASTO if form_type == 'gasto' else CATEGORIAS_INGRESO
@@ -446,15 +453,16 @@ with tab1:
         submitted = st.form_submit_button("Guardar Registro")
         if submitted:
             if form_description:
-                new_item = {
-                    'date': form_date.strftime('%Y-%m-%d'),
-                    'description': form_description,
-                    'amount': float(form_amount),
-                    'category': form_category,
-                    'type': form_type
-                }
-                add_firebase_transaction(new_item)
-                st.session_state.transactions = get_firebase_transactions()
+                with st.spinner("Guardando en la nube..."):
+                    new_item = {
+                        'date': form_date.strftime('%Y-%m-%d'),
+                        'description': form_description,
+                        'amount': float(form_amount),
+                        'category': form_category,
+                        'type': form_type
+                    }
+                    add_firebase_transaction(new_item)
+                    st.session_state.transactions = get_firebase_transactions()
                 st.success("¡Movimiento agregado a la nube exitosamente!")
                 st.rerun()
             else:
@@ -495,16 +503,17 @@ with tab2:
                     cancelled = st.form_submit_button("Cancelar Edición")
                     
                 if saved:
-                    updated_item = {
-                        'date': e_date.strftime('%Y-%m-%d'),
-                        'description': e_desc,
-                        'amount': float(e_amount),
-                        'category': e_cat,
-                        'type': e_type
-                    }
-                    update_firebase_transaction(st.session_state.edit_id, updated_item)
-                    st.session_state.transactions = get_firebase_transactions()
-                    st.session_state.edit_id = None
+                    with st.spinner("Actualizando en la nube..."):
+                        updated_item = {
+                            'date': e_date.strftime('%Y-%m-%d'),
+                            'description': e_desc,
+                            'amount': float(e_amount),
+                            'category': e_cat,
+                            'type': e_type
+                        }
+                        update_firebase_transaction(st.session_state.edit_id, updated_item)
+                        st.session_state.transactions = get_firebase_transactions()
+                        st.session_state.edit_id = None
                     st.success("¡Movimiento actualizado en la nube!")
                     st.rerun()
                 if cancelled:
@@ -530,9 +539,10 @@ with tab2:
                     st.rerun()
             with col_d:
                 if st.button("🗑️", key=f"del_{row['id']}", help="Eliminar"):
-                    delete_firebase_transaction(row['id'])
-                    st.session_state.transactions = get_firebase_transactions()
-                    if st.session_state.edit_id == row['id']:
-                        st.session_state.edit_id = None
+                    with st.spinner("Eliminando..."):
+                        delete_firebase_transaction(row['id'])
+                        st.session_state.transactions = get_firebase_transactions()
+                        if st.session_state.edit_id == row['id']:
+                            st.session_state.edit_id = None
                     st.rerun()
             st.markdown("<hr style='margin: 5px 0;'>", unsafe_allow_html=True)
