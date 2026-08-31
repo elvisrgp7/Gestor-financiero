@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 
-# Configuración de la página
 st.set_page_config(
     page_title="Mi Gestor Financiero",
     page_icon="💰",
@@ -10,7 +9,6 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# Estilos CSS modernos para imitar el diseño limpio anterior
 st.markdown("""
     <style>
     .main {
@@ -26,11 +24,9 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Categorías predefinidas
 CATEGORIAS_GASTO = ['Vivienda', 'Alimentación', 'Servicios', 'Transporte', 'Educación', 'Ocio', 'Salud', 'Otros']
 CATEGORIAS_INGRESO = ['Sueldo', 'Beca', 'Inversiones (BVL)', 'Intereses', 'Regalo', 'Otros']
 
-# Historial inicial 2026 (extraído de tu Excel)
 HISTORIAL_2026 = [
     { 'date': '2026-01-05', 'description': 'Cuarto', 'amount': 125.0, 'category': 'Vivienda', 'type': 'gasto' },
     { 'date': '2026-01-10', 'description': 'Internet casa', 'amount': 25.0, 'category': 'Servicios', 'type': 'gasto' },
@@ -62,7 +58,6 @@ HISTORIAL_2026 = [
 if 'transactions' not in st.session_state:
     st.session_state.transactions = HISTORIAL_2026
 
-# Título principal
 st.title("💼 Mi Gestor Financiero")
 st.markdown("Control de ingresos y gastos optimizado en Streamlit.")
 
@@ -70,7 +65,6 @@ st.sidebar.header("⚙️ Opciones")
 current_year_month = datetime.now().strftime("%Y-%m")
 selected_month = st.sidebar.text_input("Filtrar por Mes (YYYY-MM)", value="2026-08")
 
-# Botón para reiniciar/recargar historial base
 if st.sidebar.button("Cargar/Restaurar Historial 2026"):
     st.session_state.transactions = HISTORIAL_2026
     st.sidebar.success("¡Historial restaurado!")
@@ -79,7 +73,6 @@ df = pd.DataFrame(st.session_state.transactions)
 
 if not df.empty:
     df['date'] = pd.to_datetime(df['date'])
-    # Filtrar por mes seleccionado
     df_filtered = df[df['date'].dt.strftime('%Y-%m') == selected_month].copy()
     df_filtered.sort_values(by='date', ascending=False, inplace=True)
     
@@ -87,7 +80,8 @@ if not df.empty:
     total_expense = df_filtered[df_filtered['type'] == 'gasto']['amount'].sum()
     balance = total_income - total_expense
 
-    col1, col2, col3 = st.cols(3)
+    # FIXED: st.cols changed to st.columns
+    col1, col2, col3 = st.columns(3)
     col1.metric("Balance del Mes", f"S/ {balance:,.2f}")
     col2.metric("Ingresos", f"S/ {total_income:,.2f}")
     col3.metric("Gastos", f"S/ {total_expense:,.2f}")
@@ -142,7 +136,6 @@ with tab2:
                 st.markdown(f"<span style='color:{color}; font-weight:bold; font-size:1.1em;'>{sign}S/ {row['amount']:,.2f}</span>", unsafe_allow_html=True)
             with col_c:
                 if st.button("🗑️", key=f"del_{idx}"):
-                    # Eliminar de la lista principal basado en los valores
                     orig_idx = df[(df['date'] == row['date']) & (df['description'] == row['description']) & (df['amount'] == row['amount'])].index
                     if not orig_idx.empty:
                         st.session_state.transactions.pop(orig_idx[0])
