@@ -1,14 +1,3 @@
-import streamlit as st
-import pandas as pd
-from datetime import datetime
-
-st.set_page_config(
-    page_title="Mi Gestor Financiero",
-    page_icon="💼",
-    layout="centered",
-    initial_sidebar_state="collapsed"
-)
-
 st.markdown("""
     <style>
     .main {
@@ -27,7 +16,6 @@ st.markdown("""
 CATEGORIAS_GASTO = ['Vivienda', 'Alimentación', 'Servicios', 'Transporte', 'Educación', 'Ocio', 'Salud', 'Otros']
 CATEGORIAS_INGRESO = ['Sueldo', 'Beca', 'Inversiones (BVL)', 'Intereses', 'Regalo', 'Otros']
 
-# HISTORIAL COMPLETO 2026 (ENERO A SEPTIEMBRE)
 HISTORIAL_2026 = [
     # --- ENERO 2026 ---
     { 'date': '2026-01-05', 'description': 'Cuarto', 'amount': 175.0, 'category': 'Vivienda', 'type': 'gasto' },
@@ -246,6 +234,9 @@ HISTORIAL_2026 = [
 if 'transactions' not in st.session_state:
     st.session_state.transactions = HISTORIAL_2026
 
+if 'edit_idx' not in st.session_state:
+    st.session_state.edit_idx = None
+
 st.title("💼 Mi Gestor Financiero")
 st.markdown("Control inteligente de ingresos, gastos y reportes en tiempo real desde Enero 2026.")
 
@@ -255,6 +246,7 @@ search_query = st.sidebar.text_input("🔍 Buscar en detalle", value="")
 
 if st.sidebar.button("🔄 Restaurar Todo el Historial 2026"):
     st.session_state.transactions = HISTORIAL_2026
+    st.session_state.edit_idx = None
     st.sidebar.success("¡Historial completo restaurado!")
 
 df = pd.DataFrame(st.session_state.transactions)
@@ -333,6 +325,42 @@ with tab2:
         )
         st.markdown("<br>", unsafe_allow_html=True)
 
+    if st.session_state.edit_idx is not None:
+        st.markdown("---")
+        st.info(f"✏️ Estás editando el movimiento seleccionado.")
+        t_to_edit = st.session_state.transactions[st.session_state.edit_idx]
+        
+        with st.form("edit_form"):
+            e_type = st.radio("Tipo", ["gasto", "ingreso"], horizontal=True, index=0 if t_to_edit['type'] == 'gasto' else 1)
+            e_date = st.date_input("Fecha", value=pd.to_datetime(t_to_edit['date']))
+            e_desc = st.text_input("Detalle", value=t_to_edit['description'])
+            e_cats = CATEGORIAS_GASTO if e_type == 'gasto' else CATEGORIAS_INGRESO
+            cat_idx = e_cats.index(t_to_edit['category']) if t_to_edit['category'] in e_cats else 0
+            e_cat = st.selectbox("Categoría", e_cats, index=cat_idx)
+            e_amount = st.number_input("Monto (S/)", min_value=0.01, step=1.0, value=float(t_to_edit['amount']))
+            
+            col_save, col_cancel = st.columns(2)
+            with col_save:
+                saved = st.form_submit_button("Guardar Cambios")
+            with col_cancel:
+                cancelled = st.form_submit_button("Cancelar Edición")
+                
+            if saved:
+                st.session_state.transactions[st.session_state.edit_idx] = {
+                    'date': e_date.strftime('%Y-%m-%d'),
+                    'description': e_desc,
+                    'amount': float(e_amount),
+                    'category': e_cat,
+                    'type': e_type
+                }
+                st.session_state.edit_idx = None
+                st.success("¡Movimiento actualizado exitosamente!")
+                st.rerun()
+            if cancelled:
+                st.session_state.edit_idx = None
+                st.rerun()
+        st.markdown("---")
+
     if df_filtered.empty:
         st.info("No hay movimientos registrados para este mes o búsqueda.")
     else:
@@ -340,15 +368,22 @@ with tab2:
             sign = "+" if row['type'] == 'ingreso' else "-"
             color = "green" if row['type'] == 'ingreso' else "red"
             
-            col_a, col_b, col_c = st.columns([4, 2, 1])
+            col_a, col_b, col_c, col_d = st.columns([3, 2, 1, 1])
             with col_a:
                 st.markdown(f"**{row['description']}**<br><small style='color:gray;'>{row['date'].strftime('%Y-%m-%d')} • {row['category']}</small>", unsafe_allow_html=True)
             with col_b:
                 st.markdown(f"<span style='color:{color}; font-weight:bold; font-size:1.1em;'>{sign}S/ {row['amount']:,.2f}</span>", unsafe_allow_html=True)
             with col_c:
-                if st.button("🗑️", key=f"del_{idx}"):
-                    orig_idx = df[(df['date'] == row['date']) & (df['description'] == row['description']) & (df['amount'] == row['amount'])].index
+                orig_idx = df[(df['date'] == row['date']) & (df['description'] == row['description']) & (df['amount'] == row['amount']) & (df['category'] == row['category'])].index
+                if st.button("✏️", key=f"edit_btn_{idx}", help="Editar"):
+                    if not orig_idx.empty:
+                        st.session_state.edit_idx = orig_idx[0]
+                        st.rerun()
+            with col_d:
+                if st.button("🗑️", key=f"del_{idx}", help="Eliminar"):
                     if not orig_idx.empty:
                         st.session_state.transactions.pop(orig_idx[0])
+                        if st.session_state.edit_idx == orig_idx[0]:
+                            st.session_state.edit_idx = None
                         st.rerun()
             st.markdown("<hr style='margin: 5px 0;'>", unsafe_allow_html=True)
