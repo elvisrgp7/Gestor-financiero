@@ -252,7 +252,7 @@ HISTORIAL_2026_INICIAL = [
 
 def get_firebase_transactions():
     try:
-        response = requests.get(FIRESTORE_URL)
+        response = requests.get(FIRESTORE_URL, headers={"Cache-Control": "no-cache"})
         if response.status_code == 200:
             data = response.json()
             docs = data.get('documents', [])
@@ -360,7 +360,8 @@ with st.sidebar.expander("⚙️ Opciones avanzadas"):
         st.success("¡Historial completo restaurado en la nube!")
         st.rerun()
 
-df = pd.DataFrame(st.session_state.transactions)
+df_all = get_firebase_transactions()
+df = pd.DataFrame(df_all)
 
 if not df.empty and 'date' in df.columns:
     df['date'] = pd.to_datetime(df['date'])
