@@ -1,3 +1,14 @@
+import streamlit as st
+import pandas as pd
+from datetime import datetime
+
+st.set_page_config(
+    page_title="Mi Gestor Financiero",
+    page_icon="💼",
+    layout="centered",
+    initial_sidebar_state="collapsed"
+)
+
 st.markdown("""
     <style>
     .main {
