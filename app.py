@@ -28,9 +28,9 @@ CATEGORIAS_GASTO = ['Vivienda', 'Alimentación', 'Servicios', 'Transporte', 'Edu
 CATEGORIAS_INGRESO = ['Sueldo', 'Beca', 'Inversiones (BVL)', 'Intereses', 'Regalo', 'Otros']
 
 HISTORIAL_2026 = [
-    # --- ENERO 2026 (Exacto según tu imagen) ---
-    { 'date': '2026-01-05', 'description': 'Cuarto', 'amount': 175.0, 'category': 'Vivienda', 'type': 'gasto' },
-    { 'date': '2026-01-01', 'description': 'Internet celular', 'amount': 26.0, 'category': 'Servicios', 'type': 'gasto' },
+    # --- ENERO 2026 ---
+    { 'date': '2026-01-12', 'description': 'Cuarto', 'amount': 175.0, 'category': 'Vivienda', 'type': 'gasto' },
+    { 'date': '2026-01-31', 'description': 'Internet celular', 'amount': 26.0, 'category': 'Servicios', 'type': 'gasto' },
     { 'date': '2026-01-07', 'description': 'Pichanga', 'amount': 18.7, 'category': 'Ocio', 'type': 'gasto' },
     { 'date': '2026-01-03', 'description': 'compras de la semana', 'amount': 120.0, 'category': 'Alimentación', 'type': 'gasto' },
     { 'date': '2026-01-10', 'description': 'compras de la semana', 'amount': 120.0, 'category': 'Alimentación', 'type': 'gasto' },
@@ -43,13 +43,13 @@ HISTORIAL_2026 = [
     { 'date': '2026-01-26', 'description': 'Pasajes + desayunos (del 26 al 30)', 'amount': 35.0, 'category': 'Transporte', 'type': 'gasto' },
     { 'date': '2026-01-15', 'description': 'gas', 'amount': 25.0, 'category': 'Servicios', 'type': 'gasto' },
     { 'date': '2026-01-21', 'description': 'pichanga', 'amount': 17.2, 'category': 'Ocio', 'type': 'gasto' },
-    { 'date': '2026-01-20', 'description': 'Pago Prestamo', 'amount': 143.0, 'category': 'Otros', 'type': 'gasto' },
+    { 'date': '2026-01-31', 'description': 'Pago Prestamo', 'amount': 143.0, 'category': 'Otros', 'type': 'gasto' },
     { 'date': '2026-01-31', 'description': 'Ingresos SBS', 'amount': 1200.0, 'category': 'Sueldo', 'type': 'ingreso' },
     { 'date': '2026-01-31', 'description': 'Ingreso intereses', 'amount': 10.0, 'category': 'Intereses', 'type': 'ingreso' },
 
     # --- FEBRERO 2026 ---
-    { 'date': '2026-02-05', 'description': 'Cuarto', 'amount': 175.0, 'category': 'Vivienda', 'type': 'gasto' },
-    { 'date': '2026-02-01', 'description': 'Internet celular', 'amount': 26.0, 'category': 'Servicios', 'type': 'gasto' },
+    { 'date': '2026-02-12', 'description': 'Cuarto', 'amount': 175.0, 'category': 'Vivienda', 'type': 'gasto' },
+    { 'date': '2026-02-28', 'description': 'Internet celular', 'amount': 26.0, 'category': 'Servicios', 'type': 'gasto' },
     { 'date': '2026-02-06', 'description': 'pasaje pache', 'amount': 39.5, 'category': 'Transporte', 'type': 'gasto' },
     { 'date': '2026-02-08', 'description': 'plantillas', 'amount': 5.0, 'category': 'Salud', 'type': 'gasto' },
     { 'date': '2026-02-10', 'description': 'medicina', 'amount': 9.6, 'category': 'Salud', 'type': 'gasto' },
@@ -64,7 +64,7 @@ HISTORIAL_2026 = [
     { 'date': '2026-02-16', 'description': 'Pasajes + desayunos', 'amount': 35.0, 'category': 'Transporte', 'type': 'gasto' },
     { 'date': '2026-02-23', 'description': 'Pasajes + desayunos', 'amount': 35.0, 'category': 'Transporte', 'type': 'gasto' },
     { 'date': '2026-02-18', 'description': 'Corte de Cabello', 'amount': 12.0, 'category': 'Otros', 'type': 'gasto' },
-    { 'date': '2026-02-20', 'description': 'Pago Prestamo', 'amount': 143.0, 'category': 'Otros', 'type': 'gasto' },
+    { 'date': '2026-02-28', 'description': 'Pago Prestamo', 'amount': 143.0, 'category': 'Otros', 'type': 'gasto' },
     { 'date': '2026-02-21', 'description': 'Pichanga', 'amount': 17.0, 'category': 'Ocio', 'type': 'gasto' },
     { 'date': '2026-02-22', 'description': 'Recargo', 'amount': 5.0, 'category': 'Otros', 'type': 'gasto' },
     { 'date': '2026-02-25', 'description': 'Pollada Colaboración', 'amount': 22.0, 'category': 'Ocio', 'type': 'gasto' },
@@ -73,8 +73,8 @@ HISTORIAL_2026 = [
     { 'date': '2026-02-28', 'description': 'Ingreso intereses', 'amount': 20.0, 'category': 'Intereses', 'type': 'ingreso' },
 
     # --- MARZO 2026 ---
-    { 'date': '2026-03-05', 'description': 'Cuarto', 'amount': 175.0, 'category': 'Vivienda', 'type': 'gasto' },
-    { 'date': '2026-03-01', 'description': 'Internet celular', 'amount': 26.0, 'category': 'Servicios', 'type': 'gasto' },
+    { 'date': '2026-03-12', 'description': 'Cuarto', 'amount': 175.0, 'category': 'Vivienda', 'type': 'gasto' },
+    { 'date': '2026-03-31', 'description': 'Internet celular', 'amount': 26.0, 'category': 'Servicios', 'type': 'gasto' },
     { 'date': '2026-03-04', 'description': 'Luz', 'amount': 26.0, 'category': 'Servicios', 'type': 'gasto' },
     { 'date': '2026-03-08', 'description': 'Deudas de Moquegua', 'amount': 88.0, 'category': 'Otros', 'type': 'gasto' },
     { 'date': '2026-03-10', 'description': 'Luz mamá', 'amount': 5.0, 'category': 'Servicios', 'type': 'gasto' },
@@ -88,7 +88,7 @@ HISTORIAL_2026 = [
     { 'date': '2026-03-16', 'description': 'Pasajes + desayunos', 'amount': 35.0, 'category': 'Transporte', 'type': 'gasto' },
     { 'date': '2026-03-23', 'description': 'Pasajes + desayunos', 'amount': 35.0, 'category': 'Transporte', 'type': 'gasto' },
     { 'date': '2026-03-12', 'description': 'Acondicionador', 'amount': 11.0, 'category': 'Otros', 'type': 'gasto' },
-    { 'date': '2026-03-20', 'description': 'Pago Prestamo', 'amount': 143.0, 'category': 'Otros', 'type': 'gasto' },
+    { 'date': '2026-03-31', 'description': 'Pago Prestamo', 'amount': 143.0, 'category': 'Otros', 'type': 'gasto' },
     { 'date': '2026-03-14', 'description': 'Aceituna', 'amount': 132.0, 'category': 'Alimentación', 'type': 'gasto' },
     { 'date': '2026-03-15', 'description': 'Pichanga', 'amount': 18.0, 'category': 'Ocio', 'type': 'gasto' },
     { 'date': '2026-03-18', 'description': 'Pichanga', 'amount': 20.9, 'category': 'Ocio', 'type': 'gasto' },
@@ -97,8 +97,8 @@ HISTORIAL_2026 = [
     { 'date': '2026-03-31', 'description': 'Ingreso intereses', 'amount': 10.0, 'category': 'Intereses', 'type': 'ingreso' },
 
     # --- ABRIL 2026 ---
-    { 'date': '2026-04-05', 'description': 'Cuarto', 'amount': 175.0, 'category': 'Vivienda', 'type': 'gasto' },
-    { 'date': '2026-04-01', 'description': 'Internet celular', 'amount': 26.0, 'category': 'Servicios', 'type': 'gasto' },
+    { 'date': '2026-04-12', 'description': 'Cuarto', 'amount': 175.0, 'category': 'Vivienda', 'type': 'gasto' },
+    { 'date': '2026-04-30', 'description': 'Internet celular', 'amount': 26.0, 'category': 'Servicios', 'type': 'gasto' },
     { 'date': '2026-04-03', 'description': 'Regalo mamá', 'amount': 200.0, 'category': 'Otros', 'type': 'gasto' },
     { 'date': '2026-04-08', 'description': 'Recargo Pedro', 'amount': 5.0, 'category': 'Otros', 'type': 'gasto' },
     { 'date': '2026-04-10', 'description': 'medicina', 'amount': 6.0, 'category': 'Salud', 'type': 'gasto' },
@@ -114,7 +114,7 @@ HISTORIAL_2026 = [
     { 'date': '2026-04-23', 'description': 'Pasajes + desayunos', 'amount': 35.0, 'category': 'Transporte', 'type': 'gasto' },
     { 'date': '2026-04-27', 'description': 'Pasajes + desayunos', 'amount': 30.0, 'category': 'Transporte', 'type': 'gasto' },
     { 'date': '2026-04-11', 'description': 'recicle', 'amount': 8.0, 'category': 'Otros', 'type': 'gasto' },
-    { 'date': '2026-04-20', 'description': 'Pago Prestamo', 'amount': 143.0, 'category': 'Otros', 'type': 'gasto' },
+    { 'date': '2026-04-30', 'description': 'Pago Prestamo', 'amount': 143.0, 'category': 'Otros', 'type': 'gasto' },
     { 'date': '2026-04-14', 'description': 'polera', 'amount': 33.0, 'category': 'Otros', 'type': 'gasto' },
     { 'date': '2026-04-15', 'description': 'gas', 'amount': 26.0, 'category': 'Servicios', 'type': 'gasto' },
     { 'date': '2026-04-18', 'description': 'corte de cabello', 'amount': 12.0, 'category': 'Otros', 'type': 'gasto' },
@@ -124,8 +124,8 @@ HISTORIAL_2026 = [
     { 'date': '2026-04-30', 'description': 'Ingreso intereses', 'amount': 14.0, 'category': 'Intereses', 'type': 'ingreso' },
 
     # --- MAYO 2026 ---
-    { 'date': '2026-05-05', 'description': 'Cuarto', 'amount': 175.0, 'category': 'Vivienda', 'type': 'gasto' },
-    { 'date': '2026-05-01', 'description': 'Internet celular (anticipado)', 'amount': 26.0, 'category': 'Servicios', 'type': 'gasto' },
+    { 'date': '2026-05-12', 'description': 'Cuarto', 'amount': 175.0, 'category': 'Vivienda', 'type': 'gasto' },
+    { 'date': '2026-05-31', 'description': 'Internet celular (anticipado)', 'amount': 26.0, 'category': 'Servicios', 'type': 'gasto' },
     { 'date': '2026-05-06', 'description': 'regalo naty', 'amount': 36.0, 'category': 'Otros', 'type': 'gasto' },
     { 'date': '2026-05-10', 'description': 'Pichanga', 'amount': 19.7, 'category': 'Ocio', 'type': 'gasto' },
     { 'date': '2026-05-15', 'description': 'Pichanga', 'amount': 23.3, 'category': 'Ocio', 'type': 'gasto' },
@@ -139,7 +139,7 @@ HISTORIAL_2026 = [
     { 'date': '2026-05-18', 'description': 'Pasajes + desayunos', 'amount': 35.0, 'category': 'Transporte', 'type': 'gasto' },
     { 'date': '2026-05-25', 'description': 'Pasajes + desayunos', 'amount': 35.0, 'category': 'Transporte', 'type': 'gasto' },
     { 'date': '2026-05-22', 'description': 'Pichanga', 'amount': 15.8, 'category': 'Ocio', 'type': 'gasto' },
-    { 'date': '2026-05-20', 'description': 'Pago Prestamo', 'amount': 143.0, 'category': 'Otros', 'type': 'gasto' },
+    { 'date': '2026-05-31', 'description': 'Pago Prestamo', 'amount': 143.0, 'category': 'Otros', 'type': 'gasto' },
     { 'date': '2026-05-12', 'description': 'Pollito', 'amount': 26.0, 'category': 'Alimentación', 'type': 'gasto' },
     { 'date': '2026-05-15', 'description': 'gas', 'amount': 26.0, 'category': 'Servicios', 'type': 'gasto' },
     { 'date': '2026-05-23', 'description': 'Pichanga', 'amount': 35.5, 'category': 'Ocio', 'type': 'gasto' },
@@ -147,9 +147,9 @@ HISTORIAL_2026 = [
     { 'date': '2026-05-31', 'description': 'Ingreso intereses', 'amount': 16.0, 'category': 'Intereses', 'type': 'ingreso' },
 
     # --- JUNIO 2026 ---
-    { 'date': '2026-06-05', 'description': 'Cuarto', 'amount': 175.0, 'category': 'Vivienda', 'type': 'gasto' },
-    { 'date': '2026-06-01', 'description': 'Internet celular (anticipado)', 'amount': 26.0, 'category': 'Servicios', 'type': 'gasto' },
-    { 'date': '2026-06-05', 'description': 'Internt fijo', 'amount': 70.0, 'category': 'Servicios', 'type': 'gasto' },
+    { 'date': '2026-06-12', 'description': 'Cuarto', 'amount': 175.0, 'category': 'Vivienda', 'type': 'gasto' },
+    { 'date': '2026-06-30', 'description': 'Internet celular (anticipado)', 'amount': 26.0, 'category': 'Servicios', 'type': 'gasto' },
+    { 'date': '2026-06-30', 'description': 'Internt fijo', 'amount': 70.0, 'category': 'Servicios', 'type': 'gasto' },
     { 'date': '2026-06-10', 'description': 'medicina gripa', 'amount': 17.0, 'category': 'Salud', 'type': 'gasto' },
     { 'date': '2026-06-10', 'description': 'shampoo Tio nacho', 'amount': 20.0, 'category': 'Otros', 'type': 'gasto' },
     { 'date': '2026-06-27', 'description': 'Pichanga 27.06', 'amount': 19.7, 'category': 'Ocio', 'type': 'gasto' },
@@ -165,7 +165,7 @@ HISTORIAL_2026 = [
     { 'date': '2026-06-24', 'description': 'Pasajes + desayunos (del 22 al 26)', 'amount': 42.5, 'category': 'Transporte', 'type': 'gasto' },
     { 'date': '2026-06-29', 'description': 'Pichanga 29.06', 'amount': 23.0, 'category': 'Ocio', 'type': 'gasto' },
     { 'date': '2026-06-15', 'description': 'Salida tio manuel', 'amount': 23.0, 'category': 'Ocio', 'type': 'gasto' },
-    { 'date': '2026-06-20', 'description': 'Pago Prestamo', 'amount': 143.0, 'category': 'Otros', 'type': 'gasto' },
+    { 'date': '2026-06-30', 'description': 'Pago Prestamo', 'amount': 143.0, 'category': 'Otros', 'type': 'gasto' },
     { 'date': '2026-06-05', 'description': 'Biotina 05/06', 'amount': 53.83, 'category': 'Salud', 'type': 'gasto' },
     { 'date': '2026-06-18', 'description': 'lavadora', 'amount': 10.0, 'category': 'Otros', 'type': 'gasto' },
     { 'date': '2026-06-19', 'description': 'Pastillas', 'amount': 19.0, 'category': 'Salud', 'type': 'gasto' },
@@ -176,9 +176,9 @@ HISTORIAL_2026 = [
     { 'date': '2026-06-30', 'description': 'Ingreso intereses', 'amount': 16.0, 'category': 'Intereses', 'type': 'ingreso' },
 
     # --- JULIO 2026 ---
-    { 'date': '2026-07-05', 'description': 'Cuarto', 'amount': 175.0, 'category': 'Vivienda', 'type': 'gasto' },
-    { 'date': '2026-07-01', 'description': 'Internet celular (anticipado)', 'amount': 26.0, 'category': 'Servicios', 'type': 'gasto' },
-    { 'date': '2026-07-05', 'description': 'Internt fijo', 'amount': 70.0, 'category': 'Servicios', 'type': 'gasto' },
+    { 'date': '2026-07-12', 'description': 'Cuarto', 'amount': 175.0, 'category': 'Vivienda', 'type': 'gasto' },
+    { 'date': '2026-07-31', 'description': 'Internet celular (anticipado)', 'amount': 26.0, 'category': 'Servicios', 'type': 'gasto' },
+    { 'date': '2026-07-31', 'description': 'Internt fijo', 'amount': 70.0, 'category': 'Servicios', 'type': 'gasto' },
     { 'date': '2026-07-08', 'description': 'Recogo DNI', 'amount': 3.0, 'category': 'Otros', 'type': 'gasto' },
     { 'date': '2026-07-10', 'description': 'crema mon', 'amount': 17.0, 'category': 'Salud', 'type': 'gasto' },
     { 'date': '2026-07-05', 'description': 'compras de la semana', 'amount': 120.0, 'category': 'Alimentación', 'type': 'gasto' },
@@ -192,7 +192,7 @@ HISTORIAL_2026 = [
     { 'date': '2026-07-29', 'description': 'Pasajes + desayunos (del 27 al 31)', 'amount': 17.0, 'category': 'Transporte', 'type': 'gasto' },
     { 'date': '2026-07-18', 'description': 'cumple teffa', 'amount': 132.0, 'category': 'Ocio', 'type': 'gasto' },
     { 'date': '2026-07-11', 'description': 'Pichanga 11.07', 'amount': 25.7, 'category': 'Ocio', 'type': 'gasto' },
-    { 'date': '2026-07-20', 'description': 'Pago Prestamo', 'amount': 143.0, 'category': 'Otros', 'type': 'gasto' },
+    { 'date': '2026-07-31', 'description': 'Pago Prestamo', 'amount': 143.0, 'category': 'Otros', 'type': 'gasto' },
     { 'date': '2026-07-04', 'description': 'Pichanga 04.07', 'amount': 31.7, 'category': 'Ocio', 'type': 'gasto' },
     { 'date': '2026-07-14', 'description': 'Gas', 'amount': 26.0, 'category': 'Servicios', 'type': 'gasto' },
     { 'date': '2026-07-25', 'description': 'Cine + salida', 'amount': 84.0, 'category': 'Ocio', 'type': 'gasto' },
@@ -201,9 +201,9 @@ HISTORIAL_2026 = [
     { 'date': '2026-07-31', 'description': 'Ingreso intereses', 'amount': 17.0, 'category': 'Intereses', 'type': 'ingreso' },
 
     # --- AGOSTO 2026 ---
-    { 'date': '2026-08-05', 'description': 'Cuarto', 'amount': 175.0, 'category': 'Vivienda', 'type': 'gasto' },
-    { 'date': '2026-08-01', 'description': 'Internet celular (anticipado)', 'amount': 26.0, 'category': 'Servicios', 'type': 'gasto' },
-    { 'date': '2026-08-05', 'description': 'Internt fijo', 'amount': 70.0, 'category': 'Servicios', 'type': 'gasto' },
+    { 'date': '2026-08-12', 'description': 'Cuarto', 'amount': 175.0, 'category': 'Vivienda', 'type': 'gasto' },
+    { 'date': '2026-08-31', 'description': 'Internet celular (anticipado)', 'amount': 26.0, 'category': 'Servicios', 'type': 'gasto' },
+    { 'date': '2026-08-31', 'description': 'Internt fijo', 'amount': 70.0, 'category': 'Servicios', 'type': 'gasto' },
     { 'date': '2026-08-02', 'description': 'compras de la semana', 'amount': 120.0, 'category': 'Alimentación', 'type': 'gasto' },
     { 'date': '2026-08-09', 'description': 'compras de la semana', 'amount': 120.0, 'category': 'Alimentación', 'type': 'gasto' },
     { 'date': '2026-08-16', 'description': 'compras de la semana', 'amount': 120.0, 'category': 'Alimentación', 'type': 'gasto' },
@@ -217,7 +217,7 @@ HISTORIAL_2026 = [
     { 'date': '2026-08-15', 'description': 'Pedido Temu Mama', 'amount': 50.0, 'category': 'Otros', 'type': 'gasto' },
     { 'date': '2026-08-08', 'description': 'Shampo + Jabon', 'amount': 53.8, 'category': 'Otros', 'type': 'gasto' },
     { 'date': '2026-08-18', 'description': 'cevichito', 'amount': 10.0, 'category': 'Alimentación', 'type': 'gasto' },
-    { 'date': '2026-08-20', 'description': 'Pago Prestamo', 'amount': 143.0, 'category': 'Otros', 'type': 'gasto' },
+    { 'date': '2026-08-31', 'description': 'Pago Prestamo', 'amount': 143.0, 'category': 'Otros', 'type': 'gasto' },
     { 'date': '2026-08-14', 'description': 'Pasaje mom', 'amount': 130.0, 'category': 'Transporte', 'type': 'gasto' },
     { 'date': '2026-08-11', 'description': 'gas', 'amount': 26.0, 'category': 'Servicios', 'type': 'gasto' },
     { 'date': '2026-08-15', 'description': 'pichanga 15/08', 'amount': 26.7, 'category': 'Ocio', 'type': 'gasto' },
@@ -228,9 +228,9 @@ HISTORIAL_2026 = [
     { 'date': '2026-08-31', 'description': 'Ingreso intereses', 'amount': 15.0, 'category': 'Intereses', 'type': 'ingreso' },
 
     # --- SETIEMBRE 2026 ---
-    { 'date': '2026-09-05', 'description': 'Cuarto', 'amount': 175.0, 'category': 'Vivienda', 'type': 'gasto' },
-    { 'date': '2026-09-01', 'description': 'Internet celular (anticipado)', 'amount': 27.0, 'category': 'Servicios', 'type': 'gasto' },
-    { 'date': '2026-09-05', 'description': 'Internt fijo', 'amount': 70.0, 'category': 'Servicios', 'type': 'gasto' },
+    { 'date': '2026-09-12', 'description': 'Cuarto', 'amount': 175.0, 'category': 'Vivienda', 'type': 'gasto' },
+    { 'date': '2026-09-30', 'description': 'Internet celular (anticipado)', 'amount': 27.0, 'category': 'Servicios', 'type': 'gasto' },
+    { 'date': '2026-09-30', 'description': 'Internt fijo', 'amount': 70.0, 'category': 'Servicios', 'type': 'gasto' },
     { 'date': '2026-09-06', 'description': 'compras de la semana', 'amount': 120.0, 'category': 'Alimentación', 'type': 'gasto' },
     { 'date': '2026-09-13', 'description': 'compras de la semana', 'amount': 120.0, 'category': 'Alimentación', 'type': 'gasto' },
     { 'date': '2026-09-20', 'description': 'compras de la semana', 'amount': 120.0, 'category': 'Alimentación', 'type': 'gasto' },
@@ -240,7 +240,7 @@ HISTORIAL_2026 = [
     { 'date': '2026-09-16', 'description': 'del 14 al 18 Pasajes + desayunos', 'amount': 42.5, 'category': 'Transporte', 'type': 'gasto' },
     { 'date': '2026-09-23', 'description': 'del 21 al 58 Pasajes + desayunos', 'amount': 42.5, 'category': 'Transporte', 'type': 'gasto' },
     { 'date': '2026-09-30', 'description': 'del 28 al 2/10 Pasajes + desayunos', 'amount': 42.5, 'category': 'Transporte', 'type': 'gasto' },
-    { 'date': '2026-09-20', 'description': 'Pago Prestamo', 'amount': 143.0, 'category': 'Otros', 'type': 'gasto' },
+    { 'date': '2026-09-30', 'description': 'Pago Prestamo', 'amount': 143.0, 'category': 'Otros', 'type': 'gasto' },
     { 'date': '2026-09-30', 'description': 'Ingresos SBS', 'amount': 1500.0, 'category': 'Sueldo', 'type': 'ingreso' },
     { 'date': '2026-09-30', 'description': 'Ingreso intereses', 'amount': 10.0, 'category': 'Intereses', 'type': 'ingreso' },
 ]
