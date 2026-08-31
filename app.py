@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 from datetime import datetime
+import requests
 
 st.set_page_config(
     page_title="Mi Gestor Financiero",
@@ -24,10 +25,16 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-CATEGORIAS_GASTO = ['Vivienda', 'Alimentación', 'Servicios', 'Transporte', 'Educación', 'Ocio', 'Salud', 'Gasto Familiar', 'Otros']
-CATEGORIAS_INGRESO = ['Sueldo', 'Inversiones (BVL)', 'Intereses', 'Otros']
+# Credenciales de tu Firebase Firestore
+FIREBASE_API_KEY = "AIzaSyBXM-zge0ybXqaRpOPo617pN3MxqB6c9QQ"
+PROJECT_ID = "mi-gestor-eb931"
+FIRESTORE_URL = f"https://firestore.googleapis.com/v1/projects/{PROJECT_ID}/databases/(default)/documents/transactions?key={FIREBASE_API_KEY}"
 
-HISTORIAL_2026 = [
+CATEGORIAS_GASTO = ['Vivienda', 'Alimentación', 'Servicios', 'Transporte', 'Educación', 'Ocio', 'Salud', 'Otros']
+CATEGORIAS_INGRESO = ['Sueldo', 'Beca', 'Inversiones (BVL)', 'Intereses', 'Regalo', 'Otros']
+
+# Historial completo 2026 con tus reglas de fechas exactas
+HISTORIAL_2026_INICIAL = [
     # --- ENERO 2026 ---
     { 'date': '2026-01-12', 'description': 'Cuarto', 'amount': 175.0, 'category': 'Vivienda', 'type': 'gasto' },
     { 'date': '2026-01-31', 'description': 'Internet celular', 'amount': 26.0, 'category': 'Servicios', 'type': 'gasto' },
@@ -44,33 +51,33 @@ HISTORIAL_2026 = [
     { 'date': '2026-01-15', 'description': 'gas', 'amount': 25.0, 'category': 'Servicios', 'type': 'gasto' },
     { 'date': '2026-01-21', 'description': 'pichanga', 'amount': 17.2, 'category': 'Ocio', 'type': 'gasto' },
     { 'date': '2026-01-31', 'description': 'Pago Prestamo', 'amount': 143.0, 'category': 'Otros', 'type': 'gasto' },
-    { 'date': '2026-01-31', 'description': 'Salario SBS', 'amount': 1200.0, 'category': 'Sueldo', 'type': 'ingreso' },
-    { 'date': '2026-01-31', 'description': 'Ingreso intereses Cuenta Ahorros', 'amount': 10.0, 'category': 'Intereses', 'type': 'ingreso' },
+    { 'date': '2026-01-31', 'description': 'Ingresos SBS', 'amount': 1200.0, 'category': 'Sueldo', 'type': 'ingreso' },
+    { 'date': '2026-01-31', 'description': 'Ingreso intereses', 'amount': 10.0, 'category': 'Intereses', 'type': 'ingreso' },
 
     # --- FEBRERO 2026 ---
     { 'date': '2026-02-12', 'description': 'Cuarto', 'amount': 175.0, 'category': 'Vivienda', 'type': 'gasto' },
     { 'date': '2026-02-28', 'description': 'Internet celular', 'amount': 26.0, 'category': 'Servicios', 'type': 'gasto' },
-    { 'date': '2026-02-06', 'description': 'pasaje padre', 'amount': 99.5, 'category': 'Gasto Familiar', 'type': 'gasto' },
-    { 'date': '2026-02-08', 'description': 'plantillas', 'amount': 5.0, 'category': 'Otros', 'type': 'gasto' },
-    { 'date': '2026-02-10', 'description': 'marcianos-antojo', 'amount': 6, 'category': 'Otros', 'type': 'gasto' },
-    { 'date': '2026-02-12', 'description': 'Luz mamá', 'amount': 5.0, 'category': 'Gasto Familiar', 'type': 'gasto' },
+    { 'date': '2026-02-06', 'description': 'pasaje pache', 'amount': 39.5, 'category': 'Transporte', 'type': 'gasto' },
+    { 'date': '2026-02-08', 'description': 'plantillas', 'amount': 5.0, 'category': 'Salud', 'type': 'gasto' },
+    { 'date': '2026-02-10', 'description': 'medicina', 'amount': 9.6, 'category': 'Salud', 'type': 'gasto' },
+    { 'date': '2026-02-12', 'description': 'Luz mamá', 'amount': 5.0, 'category': 'Servicios', 'type': 'gasto' },
     { 'date': '2026-02-01', 'description': 'compras de la semana', 'amount': 120.0, 'category': 'Alimentación', 'type': 'gasto' },
-    { 'date': '2026-02-08', 'description': 'compras de la semana', 'amount': 100.0, 'category': 'Alimentación', 'type': 'gasto' },
+    { 'date': '2026-02-08', 'description': 'compras de la semana', 'amount': 120.0, 'category': 'Alimentación', 'type': 'gasto' },
     { 'date': '2026-02-15', 'description': 'compras de la semana', 'amount': 120.0, 'category': 'Alimentación', 'type': 'gasto' },
     { 'date': '2026-02-22', 'description': 'compras de la semana', 'amount': 120.0, 'category': 'Alimentación', 'type': 'gasto' },
-    { 'date': '2026-02-14', 'description': 'Pichanga', 'amount': 15.7, 'category': 'Ocio', 'type': 'gasto' },
+    { 'date': '2026-02-14', 'description': 'Pichanga', 'amount': 19.7, 'category': 'Ocio', 'type': 'gasto' },
     { 'date': '2026-02-02', 'description': 'Pasajes + desayunos', 'amount': 35.0, 'category': 'Transporte', 'type': 'gasto' },
     { 'date': '2026-02-09', 'description': 'Pasajes + desayunos', 'amount': 35.0, 'category': 'Transporte', 'type': 'gasto' },
     { 'date': '2026-02-16', 'description': 'Pasajes + desayunos', 'amount': 35.0, 'category': 'Transporte', 'type': 'gasto' },
     { 'date': '2026-02-23', 'description': 'Pasajes + desayunos', 'amount': 35.0, 'category': 'Transporte', 'type': 'gasto' },
     { 'date': '2026-02-18', 'description': 'Corte de Cabello', 'amount': 12.0, 'category': 'Otros', 'type': 'gasto' },
-    { 'date': '2026-02-28', 'description': 'Pago Prestamo', 'amount': 143.0, 'category': 'Gasto Familiar', 'type': 'gasto' },
+    { 'date': '2026-02-28', 'description': 'Pago Prestamo', 'amount': 143.0, 'category': 'Otros', 'type': 'gasto' },
     { 'date': '2026-02-21', 'description': 'Pichanga', 'amount': 17.0, 'category': 'Ocio', 'type': 'gasto' },
-    { 'date': '2026-02-22', 'description': 'Recarga Mon', 'amount': 5.0, 'category': 'Gasto Familiar', 'type': 'gasto' },
-    { 'date': '2026-02-25', 'description': 'Pollada Colaboración', 'amount': 22.0, 'category': 'Otros', 'type': 'gasto' },
+    { 'date': '2026-02-22', 'description': 'Recargo', 'amount': 5.0, 'category': 'Otros', 'type': 'gasto' },
+    { 'date': '2026-02-25', 'description': 'Pollada Colaboración', 'amount': 22.0, 'category': 'Ocio', 'type': 'gasto' },
     { 'date': '2026-02-27', 'description': 'Voleyball', 'amount': 18.0, 'category': 'Ocio', 'type': 'gasto' },
-    { 'date': '2026-02-28', 'description': 'Salario SBS', 'amount': 1930.0, 'category': 'Sueldo', 'type': 'ingreso' },
-    { 'date': '2026-02-28', 'description': 'Ingreso intereses Cuenta Ahorros', 'amount': 10.0, 'category': 'Intereses', 'type': 'ingreso' },
+    { 'date': '2026-02-28', 'description': 'Ingresos SBS', 'amount': 1500.0, 'category': 'Sueldo', 'type': 'ingreso' },
+    { 'date': '2026-02-28', 'description': 'Ingreso intereses', 'amount': 20.0, 'category': 'Intereses', 'type': 'ingreso' },
 
     # --- MARZO 2026 ---
     { 'date': '2026-03-12', 'description': 'Cuarto', 'amount': 175.0, 'category': 'Vivienda', 'type': 'gasto' },
@@ -245,14 +252,85 @@ HISTORIAL_2026 = [
     { 'date': '2026-09-30', 'description': 'Ingreso intereses', 'amount': 10.0, 'category': 'Intereses', 'type': 'ingreso' },
 ]
 
-if 'transactions' not in st.session_state:
-    st.session_state.transactions = HISTORIAL_2026
+# Funciones para interactuar con Firebase Firestore REST API
+def get_firebase_transactions():
+    try:
+        response = requests.get(FIRESTORE_URL)
+        if response.status_code == 200:
+            data = response.json()
+            docs = data.get('documents', [])
+            transactions = []
+            for doc in docs:
+                name = doc.get('name')
+                doc_id = name.split('/')[-1]
+                fields = doc.get('fields', {})
+                t = {
+                    'id': doc_id,
+                    'date': fields.get('date', {}).get('stringValue', ''),
+                    'description': fields.get('description', {}).get('stringValue', ''),
+                    'amount': float(fields.get('amount', {}).get('doubleValue', fields.get('amount', {}).get('integerValue', 0))),
+                    'category': fields.get('category', {}).get('stringValue', 'Otros'),
+                    'type': fields.get('type', {}).get('stringValue', 'gasto')
+                }
+                transactions.append(t)
+            return transactions
+    except Exception as e:
+        print("Error leyendo Firebase:", e)
+    return []
 
-if 'edit_idx' not in st.session_state:
-    st.session_state.edit_idx = None
+def add_firebase_transaction(item):
+    try:
+        body = {
+            "fields": {
+                "date": {"stringValue": item['date']},
+                "description": {"stringValue": item['description']},
+                "amount": {"doubleValue": float(item['amount'])},
+                "category": {"stringValue": item['category']},
+                "type": {"stringValue": item['type']}
+            }
+        }
+        requests.post(FIRESTORE_URL, json=body)
+    except Exception as e:
+        print("Error guardando en Firebase:", e)
+
+def delete_firebase_transaction(doc_id):
+    try:
+        delete_url = f"https://firestore.googleapis.com/v1/projects/{PROJECT_ID}/databases/(default)/documents/transactions/{doc_id}?key={FIREBASE_API_KEY}"
+        requests.delete(delete_url)
+    except Exception as e:
+        print("Error eliminando de Firebase:", e)
+
+def update_firebase_transaction(doc_id, item):
+    try:
+        patch_url = f"https://firestore.googleapis.com/v1/projects/{PROJECT_ID}/databases/(default)/documents/transactions/{doc_id}?key={FIREBASE_API_KEY}&updateMask.fieldPaths=date&updateMask.fieldPaths=description&updateMask.fieldPaths=amount&updateMask.fieldPaths=category&updateMask.fieldPaths=type"
+        body = {
+            "fields": {
+                "date": {"stringValue": item['date']},
+                "description": {"stringValue": item['description']},
+                "amount": {"doubleValue": float(item['amount'])},
+                "category": {"stringValue": item['category']},
+                "type": {"stringValue": item['type']}
+            }
+        }
+        requests.patch(patch_url, json=body)
+    except Exception as e:
+        print("Error actualizando en Firebase:", e)
+
+# Inicializar estado con Firebase
+if 'transactions' not in st.session_state:
+    cloud_data = get_firebase_transactions()
+    if not cloud_data:
+        # Si está vacío, subimos el historial inicial de 2026
+        for item in HISTORIAL_2026_INICIAL:
+            add_firebase_transaction(item)
+        cloud_data = get_firebase_transactions()
+    st.session_state.transactions = cloud_data
+
+if 'edit_id' not in st.session_state:
+    st.session_state.edit_id = None
 
 st.title("💼 Mi Gestor Financiero")
-st.markdown("Control inteligente de ingresos, gastos y reportes en tiempo real desde Enero 2026.")
+st.markdown("Control inteligente sincronizado en la nube (Firebase). Tus datos nunca se perderán al actualizar código.")
 
 st.sidebar.header("⚙️ Configuración y Filtros")
 
@@ -265,25 +343,32 @@ nombres_meses = {
 }
 
 selected_month = st.sidebar.selectbox(
-    "Seleccionar Mes", 
+    "Filtrar por Mes", 
     options=meses_opciones, 
     format_func=lambda x: nombres_meses.get(x, x),
-    index=0 # Por defecto Enero 2026
+    index=0 # Inicia en Enero 2026 por defecto
 )
 
 search_query = st.sidebar.text_input("🔍 Buscar en detalle", value="")
 
 with st.sidebar.expander("⚙️ Opciones avanzadas"):
-    st.markdown("<small style='color:gray;'>¿Alteraste o eliminaste datos por error? Aquí puedes volver a cargar todo el Excel original del 2026.</small>", unsafe_allow_html=True)
+    st.markdown("<small style='color:gray;'>¿Quieres restablecer todo el historial original del 2026?</small>", unsafe_allow_html=True)
     if st.button("🔄 Restaurar Todo el Historial 2026"):
-        st.session_state.transactions = HISTORIAL_2026
-        st.session_state.edit_idx = None
-        st.success("¡Historial completo restaurado con éxito!")
+        # Limpiar y recargar
+        current_docs = get_firebase_transactions()
+        for doc in current_docs:
+            if 'id' in doc:
+                delete_firebase_transaction(doc['id'])
+        for item in HISTORIAL_2026_INICIAL:
+            add_firebase_transaction(item)
+        st.session_state.transactions = get_firebase_transactions()
+        st.session_state.edit_id = None
+        st.success("¡Historial completo restaurado en la nube!")
         st.rerun()
 
 df = pd.DataFrame(st.session_state.transactions)
 
-if not df.empty:
+if not df.empty and 'date' in df.columns:
     df['date'] = pd.to_datetime(df['date'])
     df_filtered = df[df['date'].dt.strftime('%Y-%m') == selected_month].copy()
     
@@ -301,7 +386,7 @@ if not df.empty:
     col2.metric("Ingresos", f"S/ {total_income:,.2f}")
     col3.metric("Gastos", f"S/ {total_expense:,.2f}")
 else:
-    df_filtered = pd.DataFrame(columns=['date', 'description', 'amount', 'category', 'type'])
+    df_filtered = pd.DataFrame(columns=['id', 'date', 'description', 'amount', 'category', 'type'])
     total_income, total_expense, balance = 0, 0, 0
 
 st.divider()
@@ -338,8 +423,9 @@ with tab1:
                     'category': form_category,
                     'type': form_type
                 }
-                st.session_state.transactions.append(new_item)
-                st.success("¡Movimiento agregado exitosamente!")
+                add_firebase_transaction(new_item)
+                st.session_state.transactions = get_firebase_transactions()
+                st.success("¡Movimiento agregado a la nube exitosamente!")
                 st.rerun()
             else:
                 st.error("Por favor ingresa un detalle.")
@@ -357,40 +443,43 @@ with tab2:
         )
         st.markdown("<br>", unsafe_allow_html=True)
 
-    if st.session_state.edit_idx is not None:
+    if st.session_state.edit_id is not None:
         st.markdown("---")
-        st.info(f"✏️ Estás editando el movimiento seleccionado.")
-        t_to_edit = st.session_state.transactions[st.session_state.edit_idx]
+        st.info(f"✏️ Editando movimiento seleccionado.")
+        t_to_edit = next((item for item in st.session_state.transactions if item['id'] == st.session_state.edit_id), None)
         
-        with st.form("edit_form"):
-            e_type = st.radio("Tipo", ["gasto", "ingreso"], horizontal=True, index=0 if t_to_edit['type'] == 'gasto' else 1)
-            e_date = st.date_input("Fecha", value=pd.to_datetime(t_to_edit['date']))
-            e_desc = st.text_input("Detalle", value=t_to_edit['description'])
-            e_cats = CATEGORIAS_GASTO if e_type == 'gasto' else CATEGORIAS_INGRESO
-            cat_idx = e_cats.index(t_to_edit['category']) if t_to_edit['category'] in e_cats else 0
-            e_cat = st.selectbox("Categoría", e_cats, index=cat_idx)
-            e_amount = st.number_input("Monto (S/)", min_value=0.01, step=1.0, value=float(t_to_edit['amount']))
-            
-            col_save, col_cancel = st.columns(2)
-            with col_save:
-                saved = st.form_submit_button("Guardar Cambios")
-            with col_cancel:
-                cancelled = st.form_submit_button("Cancelar Edición")
+        if t_to_edit:
+            with st.form("edit_form"):
+                e_type = st.radio("Tipo", ["gasto", "ingreso"], horizontal=True, index=0 if t_to_edit['type'] == 'gasto' else 1)
+                e_date = st.date_input("Fecha", value=pd.to_datetime(t_to_edit['date']))
+                e_desc = st.text_input("Detalle", value=t_to_edit['description'])
+                e_cats = CATEGORIAS_GASTO if e_type == 'gasto' else CATEGORIAS_INGRESO
+                cat_idx = e_cats.index(t_to_edit['category']) if t_to_edit['category'] in e_cats else 0
+                e_cat = st.selectbox("Categoría", e_cats, index=cat_idx)
+                e_amount = st.number_input("Monto (S/)", min_value=0.01, step=1.0, value=float(t_to_edit['amount']))
                 
-            if saved:
-                st.session_state.transactions[st.session_state.edit_idx] = {
-                    'date': e_date.strftime('%Y-%m-%d'),
-                    'description': e_desc,
-                    'amount': float(e_amount),
-                    'category': e_cat,
-                    'type': e_type
-                }
-                st.session_state.edit_idx = None
-                st.success("¡Movimiento actualizado exitosamente!")
-                st.rerun()
-            if cancelled:
-                st.session_state.edit_idx = None
-                st.rerun()
+                col_save, col_cancel = st.columns(2)
+                with col_save:
+                    saved = st.form_submit_button("Guardar Cambios")
+                with col_cancel:
+                    cancelled = st.form_submit_button("Cancelar Edición")
+                    
+                if saved:
+                    updated_item = {
+                        'date': e_date.strftime('%Y-%m-%d'),
+                        'description': e_desc,
+                        'amount': float(e_amount),
+                        'category': e_cat,
+                        'type': e_type
+                    }
+                    update_firebase_transaction(st.session_state.edit_id, updated_item)
+                    st.session_state.transactions = get_firebase_transactions()
+                    st.session_state.edit_id = None
+                    st.success("¡Movimiento actualizado en la nube!")
+                    st.rerun()
+                if cancelled:
+                    st.session_state.edit_id = None
+                    st.rerun()
         st.markdown("---")
 
     if df_filtered.empty:
@@ -406,16 +495,14 @@ with tab2:
             with col_b:
                 st.markdown(f"<span style='color:{color}; font-weight:bold; font-size:1.1em;'>{sign}S/ {row['amount']:,.2f}</span>", unsafe_allow_html=True)
             with col_c:
-                orig_idx = df[(df['date'] == row['date']) & (df['description'] == row['description']) & (df['amount'] == row['amount']) & (df['category'] == row['category'])].index
-                if st.button("✏️", key=f"edit_btn_{idx}", help="Editar"):
-                    if not orig_idx.empty:
-                        st.session_state.edit_idx = orig_idx[0]
-                        st.rerun()
+                if st.button("✏️", key=f"edit_btn_{row['id']}", help="Editar"):
+                    st.session_state.edit_id = row['id']
+                    st.rerun()
             with col_d:
-                if st.button("🗑️", key=f"del_{idx}", help="Eliminar"):
-                    if not orig_idx.empty:
-                        st.session_state.transactions.pop(orig_idx[0])
-                        if st.session_state.edit_idx == orig_idx[0]:
-                            st.session_state.edit_idx = None
-                        st.rerun()
+                if st.button("🗑️", key=f"del_{row['id']}", help="Eliminar"):
+                    delete_firebase_transaction(row['id'])
+                    st.session_state.transactions = get_firebase_transactions()
+                    if st.session_state.edit_id == row['id']:
+                        st.session_state.edit_id = None
+                    st.rerun()
             st.markdown("<hr style='margin: 5px 0;'>", unsafe_allow_html=True)
