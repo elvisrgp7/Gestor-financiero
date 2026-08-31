@@ -31,7 +31,7 @@ PROJECT_ID = "mi-gestor-eb931"
 FIRESTORE_URL = f"https://firestore.googleapis.com/v1/projects/{PROJECT_ID}/databases/(default)/documents/transactions?key={FIREBASE_API_KEY}"
 
 CATEGORIAS_GASTO = ['Vivienda', 'Alimentación', 'Servicios', 'Transporte', 'Educación', 'Ocio', 'Salud', 'Gasto Familiar', 'Otros']
-CATEGORIAS_INGRESO = ['Sueldo', 'Inversiones (BVL)', 'Intereses', 'Regalo', 'Otros']
+CATEGORIAS_INGRESO = ['Sueldo', 'Inversiones (BVL)', 'Intereses', 'Otros']
 
 # Historial completo 2026 con tus reglas de fechas exactas
 HISTORIAL_2026_INICIAL = [
