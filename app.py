@@ -27,7 +27,8 @@ st.markdown("""
 
 FIREBASE_API_KEY = "AIzaSyBXM-zge0ybXqaRpOPo617pN3MxqB6c9QQ"
 PROJECT_ID = "mi-gestor-eb931"
-FIRESTORE_URL = f"https://firestore.googleapis.com/v1/projects/{PROJECT_ID}/databases/(default)/documents/transactions?pageSize=5000&key={FIREBASE_API_KEY}"
+FIRESTORE_URL = f"https://firestore.googleapis.com/v1/projects/{PROJECT_ID}/databases/(default)/documents/transactions"
+SIGNUP_URL = f"https://identitytoolkit.googleapis.com/v1/accounts:signUp?key={FIREBASE_API_KEY}"
 
 CATEGORIAS_GASTO = ['Vivienda', 'Alimentación', 'Servicios', 'Transporte', 'Educación', 'Ocio', 'Salud', 'Gasto Familiar', 'Otros']
 CATEGORIAS_INGRESO = ['Sueldo', 'Inversiones (BVL)', 'Intereses', 'Otros']
@@ -250,9 +251,25 @@ HISTORIAL_2026_INICIAL = [
     { 'date': '2026-09-30', 'description': 'Ingreso intereses', 'amount': 10.0, 'category': 'Intereses', 'type': 'ingreso' },
 ]
 
+def get_auth_token():
+    if 'firebase_token' not in st.session_state:
+        try:
+            resp = requests.post(SIGNUP_URL, json={"returnSecureToken": True})
+            if resp.status_code == 200:
+                st.session_state.firebase_token = resp.json().get("idToken")
+        except Exception as e:
+            print("Error auth:", e)
+    return st.session_state.get('firebase_token')
+
 def get_firebase_transactions():
+    token = get_auth_token()
+    headers = {"Cache-Control": "no-cache"}
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+    
+    url = f"https://firestore.googleapis.com/v1/projects/{PROJECT_ID}/databases/(default)/documents/transactions?pageSize=5000&key={FIREBASE_API_KEY}"
     try:
-        response = requests.get(FIRESTORE_URL, headers={"Cache-Control": "no-cache"})
+        response = requests.get(url, headers=headers)
         if response.status_code == 200:
             data = response.json()
             docs = data.get('documents', [])
@@ -272,10 +289,16 @@ def get_firebase_transactions():
                 transactions.append(t)
             return transactions
     except Exception as e:
-        print("Error leyendo Firebase:", e)
+        st.error(f"Error leyendo Firebase: {e}")
     return []
 
 def add_firebase_transaction(item):
+    token = get_auth_token()
+    headers = {"Content-Type": "application/json"}
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+    
+    url = f"https://firestore.googleapis.com/v1/projects/{PROJECT_ID}/databases/(default)/documents/transactions?key={FIREBASE_API_KEY}"
     try:
         body = {
             "fields": {
@@ -286,20 +309,32 @@ def add_firebase_transaction(item):
                 "type": {"stringValue": item['type']}
             }
         }
-        requests.post(FIRESTORE_URL, json=body)
+        resp = requests.post(url, json=body, headers=headers)
+        if resp.status_code != 200:
+            st.error(f"Error al guardar en Firebase: {resp.text}")
     except Exception as e:
-        print("Error guardando en Firebase:", e)
+        st.error(f"Excepción guardando en Firebase: {e}")
 
 def delete_firebase_transaction(doc_id):
+    token = get_auth_token()
+    headers = {}
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+    
+    delete_url = f"https://firestore.googleapis.com/v1/projects/{PROJECT_ID}/databases/(default)/documents/transactions/{doc_id}?key={FIREBASE_API_KEY}"
     try:
-        delete_url = f"https://firestore.googleapis.com/v1/projects/{PROJECT_ID}/databases/(default)/documents/transactions/{doc_id}?key={FIREBASE_API_KEY}"
-        requests.delete(delete_url)
+        requests.delete(delete_url, headers=headers)
     except Exception as e:
-        print("Error eliminando de Firebase:", e)
+        st.error(f"Error eliminando de Firebase: {e}")
 
 def update_firebase_transaction(doc_id, item):
+    token = get_auth_token()
+    headers = {"Content-Type": "application/json"}
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+        
+    patch_url = f"https://firestore.googleapis.com/v1/projects/{PROJECT_ID}/databases/(default)/databases/(default)/documents/transactions/{doc_id}?key={FIREBASE_API_KEY}&updateMask.fieldPaths=date&updateMask.fieldPaths=description&updateMask.fieldPaths=amount&updateMask.fieldPaths=category&updateMask.fieldPaths=type"
     try:
-        patch_url = f"https://firestore.googleapis.com/v1/projects/{PROJECT_ID}/databases/(default)/documents/transactions/{doc_id}?key={FIREBASE_API_KEY}&updateMask.fieldPaths=date&updateMask.fieldPaths=description&updateMask.fieldPaths=amount&updateMask.fieldPaths=category&updateMask.fieldPaths=type"
         body = {
             "fields": {
                 "date": {"stringValue": item['date']},
@@ -309,9 +344,9 @@ def update_firebase_transaction(doc_id, item):
                 "type": {"stringValue": item['type']}
             }
         }
-        requests.patch(patch_url, json=body)
+        requests.patch(patch_url, json=body, headers=headers)
     except Exception as e:
-        print("Error actualizando en Firebase:", e)
+        st.error(f"Error actualizando en Firebase: {e}")
 
 if 'transactions' not in st.session_state:
     cloud_data = get_firebase_transactions()
@@ -325,7 +360,7 @@ if 'edit_id' not in st.session_state:
     st.session_state.edit_id = None
 
 st.title("💼 Mi Gestor Financiero")
-st.markdown("Control inteligente sincronizado en la nube (Firebase). Tus datos están seguros.")
+st.markdown("Control inteligente sincronizado en la nube (Firebase con Autenticación).")
 
 st.sidebar.header("⚙️ Configuración y Filtros")
 
