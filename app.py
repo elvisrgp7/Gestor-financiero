@@ -25,15 +25,14 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Credenciales de tu Firebase Firestore
 FIREBASE_API_KEY = "AIzaSyBXM-zge0ybXqaRpOPo617pN3MxqB6c9QQ"
 PROJECT_ID = "mi-gestor-eb931"
-FIRESTORE_URL = f"https://firestore.googleapis.com/v1/projects/{PROJECT_ID}/databases/(default)/documents/transactions?key={FIREBASE_API_KEY}"
+# Aumentado a 5000 para garantizar que nunca tengas límites al modificar o agregar años enteros
+FIRESTORE_URL = f"https://firestore.googleapis.com/v1/projects/{PROJECT_ID}/databases/(default)/documents/transactions?pageSize=5000&key={FIREBASE_API_KEY}"
 
 CATEGORIAS_GASTO = ['Vivienda', 'Alimentación', 'Servicios', 'Transporte', 'Educación', 'Ocio', 'Salud', 'Gasto Familiar', 'Otros']
 CATEGORIAS_INGRESO = ['Sueldo', 'Inversiones (BVL)', 'Intereses', 'Otros']
 
-# Historial completo 2026 con tus reglas de fechas exactas
 HISTORIAL_2026_INICIAL = [
     # --- ENERO 2026 ---
     { 'date': '2026-01-12', 'description': 'Cuarto', 'amount': 175.0, 'category': 'Vivienda', 'type': 'gasto' },
@@ -252,7 +251,6 @@ HISTORIAL_2026_INICIAL = [
     { 'date': '2026-09-30', 'description': 'Ingreso intereses', 'amount': 10.0, 'category': 'Intereses', 'type': 'ingreso' },
 ]
 
-# Funciones para interactuar con Firebase Firestore REST API
 def get_firebase_transactions():
     try:
         response = requests.get(FIRESTORE_URL)
@@ -316,11 +314,9 @@ def update_firebase_transaction(doc_id, item):
     except Exception as e:
         print("Error actualizando en Firebase:", e)
 
-# Inicializar estado con Firebase
 if 'transactions' not in st.session_state:
     cloud_data = get_firebase_transactions()
     if not cloud_data:
-        # Si está vacío, subimos el historial inicial de 2026
         for item in HISTORIAL_2026_INICIAL:
             add_firebase_transaction(item)
         cloud_data = get_firebase_transactions()
@@ -330,7 +326,7 @@ if 'edit_id' not in st.session_state:
     st.session_state.edit_id = None
 
 st.title("💼 Mi Gestor Financiero")
-st.markdown("Control inteligente sincronizado en la nube (Firebase). Tus datos nunca se perderán al actualizar código.")
+st.markdown("Control inteligente sincronizado en la nube (Firebase). Tus datos están seguros.")
 
 st.sidebar.header("⚙️ Configuración y Filtros")
 
@@ -354,7 +350,6 @@ search_query = st.sidebar.text_input("🔍 Buscar en detalle", value="")
 with st.sidebar.expander("⚙️ Opciones avanzadas"):
     st.markdown("<small style='color:gray;'>¿Quieres restablecer todo el historial original del 2026?</small>", unsafe_allow_html=True)
     if st.button("🔄 Restaurar Todo el Historial 2026"):
-        # Limpiar y recargar
         current_docs = get_firebase_transactions()
         for doc in current_docs:
             if 'id' in doc:
